@@ -41,10 +41,15 @@ class API < Grape::API
 
       if service.save
         status 201
-        { "user created" => nil }
+        { "item created" => "name=#{item.name}" }
       else
         status 400
       end
+    end
+
+    get 'all' do
+      items = Item.all
+      items.map{|item| {:name => item.name} }
     end
   end
 
