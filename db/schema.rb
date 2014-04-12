@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140403123336) do
+ActiveRecord::Schema.define(version: 20140412055253) do
+
+  create_table "friends", force: true do |t|
+    t.integer  "sending_user"
+    t.integer  "accepting_friend"
+    t.integer  "pending"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "items", force: true do |t|
     t.string   "name"

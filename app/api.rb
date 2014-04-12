@@ -30,6 +30,12 @@ class API < Grape::API
         status 400
       end
     end
+
+    get 'all' do
+      users = User.all
+      users.map{|user| {:first_name => user.first_name, :last_name => user.last_name} }
+    end 
+
   end
 
   resource :item do
@@ -50,6 +56,21 @@ class API < Grape::API
     get 'all' do
       items = Item.all
       items.map{|item| {:name => item.name} }
+    end
+  end
+
+  resource :friend do
+    post 'add' do
+      sending_user = User.find!(json_params[:sending_user])
+      receiving_user = User.find!(json_params[:receiving_user])
+
+      service = FriendService.new
+      if service.request_friendship(sending_user, receiving_user)
+        status 201
+        { "item created" => "#{sending_user.name} and #{receiving_user.name} are now friends." }
+      else
+        status 400
+      end
     end
   end
 
