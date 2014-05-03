@@ -25,7 +25,7 @@ class API < Grape::API
 
       if service.save
         status 201
-        { "user created" => "first_name=#{user.first_name} last_name=#{user.last_name} email=#{user.email}" }
+        { "user" => { :id => user.id, :first_name => user.first_name, :last_name => user.last_name } }
       else
         status 400
       end
@@ -33,7 +33,7 @@ class API < Grape::API
 
     get 'all' do
       users = User.all
-      users.map{|user| {:first_name => user.first_name, :last_name => user.last_name} }
+      users.map{|user| {:id => user.id, :first_name => user.first_name, :last_name => user.last_name} }
     end 
 
   end
@@ -61,13 +61,14 @@ class API < Grape::API
 
   resource :friend do
     post 'add' do
-      sending_user = User.find!(json_params[:sending_user])
-      receiving_user = User.find!(json_params[:receiving_user])
+      Rails.logger.info "params #{json_params}"
+      sending_user = User.find_by! id: (json_params[:friend][:sending_user])
+      accepting_user = User.find_by! id: (json_params[:friend][:accepting_user])
 
       service = FriendService.new
-      if service.request_friendship(sending_user, receiving_user)
+      if service.request_friendship(sending_user, accepting_user)
         status 201
-        { "item created" => "#{sending_user.name} and #{receiving_user.name} are now friends." }
+        { "friendship added" => "#{sending_user.name} and #{accepting_user.name} are now friends." }
       else
         status 400
       end

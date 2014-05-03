@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20140412055253) do
 
   create_table "friends", force: true do |t|
     t.integer  "sending_user"
-    t.integer  "accepting_friend"
+    t.integer  "accepting_user"
     t.integer  "pending"
     t.datetime "created_at"
     t.datetime "updated_at"
